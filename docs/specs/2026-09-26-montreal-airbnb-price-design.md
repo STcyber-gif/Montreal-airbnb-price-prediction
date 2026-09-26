@@ -151,3 +151,20 @@ Aucun score n'est fixé à l'avance ; le README présente les résultats obtenus
 
 - `.gitignore` : `data/raw/`, `data/processed/`, `.venv/`, `__pycache__/`, `.ipynb_checkpoints/`, `.pytest_cache/`.
 - Commits petits et fréquents, faits par le propriétaire du repo.
+
+## 5. Ajustements après prototypage (2026-09-26)
+
+Un prototype complet a été exécuté sur l'instantané du 2026-06-15 (10 656 annonces, 9 165 gardées). Il a conduit à ces ajustements, qui priment sur les sections précédentes :
+
+- **Instantané figé** : l'URL de l'instantané 2026-06-15 est fixée dans `src/config.py` pour que les résultats soient reproductibles.
+- **Stations de métro** : extraites du GTFS de la STM (`stops.txt`, 68 stations) et versionnées dans `data/external/metro_stations.csv`, car l'app déployée en a besoin.
+- **Pas de `data/processed/`** : `load_dataset()` recalcule nettoyage + variables en ~2 s.
+- **Modules ajoutés** : `src/config.py` (chemins, constantes) et `src/model.py` (modèles, référence naïve, validation croisée).
+- **App à la racine** : `streamlit_app.py` à la racine du repo (imports de `src` directs, nom attendu par défaut par Streamlit Community Cloud). Le dossier `app/` est supprimé.
+- **Graphiques** : sauvegardés dans `figures/` (versionné) pour le README.
+- **Variables du modèle** : on exclut les notes, le nombre d'avis et le statut superhost, que l'utilisateur de l'app ne peut pas connaître pour un nouveau logement. On garde `minimum_nights`, qui s'avère la variable la plus importante : environ la moitié des annonces imposent 31 nuits minimum, avec un prix médian de 90 $ contre 245 $.
+- **Salles de bain** : lues depuis `bathrooms_text` (0,1 % de valeurs manquantes) plutôt que `bathrooms` (21 %).
+- **Valeurs manquantes** : imputées par la médiane dans le `Pipeline` (et non dans `clean.py`) pour éviter toute fuite entre entraînement et test.
+- **Cible** : `TransformedTargetRegressor(func=np.log, inverse_func=np.exp)`, donc `predict()` renvoie directement des dollars.
+- **Fourchette de l'app** : prix × (1 ± erreur relative médiane sur le test) au lieu de ± MAE, qui donnait des bornes absurdes pour les petits prix.
+- **Dépendances** : `requirements.txt` (exécution de l'app, versions figées) et `requirements-dev.txt` (notebooks, tests).
