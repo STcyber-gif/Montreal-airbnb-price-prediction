@@ -1,0 +1,16 @@
+# Données (re-téléchargeables avec python -m src.download)
+data/raw/
+data/processed/
+
+# Environnement Python
+.venv/
+__pycache__/
+*.pyc
+
+# Jupyter / pytest
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Système
+.DS_Store
+Thumbs.db
