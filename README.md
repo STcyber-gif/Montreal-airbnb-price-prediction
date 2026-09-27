@@ -4,7 +4,7 @@ Prédire le prix par nuit d'un logement Airbnb à Montréal à partir de ses car
 et de son emplacement : données publiques, nettoyage, exploration, modèles scikit-learn
 et app Streamlit.
 
-**App en ligne :** lien ajouté après le déploiement
+**App en ligne :** [https://montreal-airbnb-price-prediction.streamlit.app/]
 
 ![Capture de l'app](figures/app_screenshot.png)
 
@@ -127,24 +127,6 @@ ces logements sont rares, et ce qui les rend chers (vue, design, prestations) n'
 - Extraire des informations des descriptions (NLP) : « vue », « terrasse », « luxe »…
 - Ajouter des données de quartier : commerces, parcs, attraits touristiques.
 
-## Reproduire le projet
-
-Prérequis : Python 3.12.
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate            # Windows (macOS/Linux : source .venv/bin/activate)
-pip install -r requirements-dev.txt
-pip install -e .                  # rend le package src importable (notebooks compris)
-
-python -m src.download            # télécharge les données
-python -m src.train               # entraîne et sauvegarde le modèle (~30 s)
-streamlit run streamlit_app.py    # lance l'app
-```
-
-Avec conda : `conda create -n airbnb-mtl python=3.12`, puis `conda activate airbnb-mtl` et les mêmes commandes `pip`.
-
-Tests (15) : `python -m pytest`
 
 ## Structure
 
