@@ -64,7 +64,8 @@ montreal-airbnb-price/
 Python est déjà disponible grâce à Anaconda : on crée un environnement dédié au projet.
 
 **Fichiers :**
-- Créer : `requirements.txt`, `requirements-dev.txt`, `pytest.ini`, `src/__init__.py`, `src/config.py`
+- Créer : `requirements.txt`, `requirements-dev.txt`, `pytest.ini`, `pyproject.toml`, `src/__init__.py`, `src/config.py`
+- Modifier : `.gitignore`
 
 - [ ] **Étape 1 : Ouvrir « Anaconda Prompt »**
 
@@ -182,10 +183,52 @@ python -c "from src.config import ROOT; import sklearn, streamlit; print(ROOT)"
 
 Attendu : le chemin complet de `montreal-airbnb-price` s'affiche, sans erreur.
 
-- [ ] **Étape 10 : Commit (à faire toi-même)**
+- [ ] **Étape 10 : Rendre `src` importable depuis n'importe où (notebooks compris)**
+
+Sans ça, `from src... import ...` ne marche que si Python est lancé depuis la racine du projet. Un notebook tourne souvent depuis un autre dossier, et on obtient alors `ModuleNotFoundError: No module named 'src'`. On déclare donc le projet comme un package et on l'installe en mode « éditable » (`-e`) : Python va lire directement le dossier `src/`, et tes modifications sont prises en compte sans réinstaller.
+
+Crée `pyproject.toml` à la racine :
+
+```toml
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "montreal-airbnb-price"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+[tool.setuptools]
+packages = ["src"]
+```
+
+Installe-le dans l'environnement :
 
 ```bash
-git add requirements.txt requirements-dev.txt pytest.ini src/__init__.py src/config.py
+python -m pip install -e .
+```
+
+Ajoute cette ligne à `.gitignore` (dossier généré par l'installation) :
+
+```text
+*.egg-info/
+```
+
+Vérifie depuis un autre dossier :
+
+```bash
+cd ..
+python -c "from src.config import ROOT; print(ROOT)"
+cd montreal-airbnb-price
+```
+
+Attendu : le chemin de `montreal-airbnb-price` s'affiche.
+
+- [ ] **Étape 11 : Commit (à faire toi-même)**
+
+```bash
+git add requirements.txt requirements-dev.txt pytest.ini pyproject.toml .gitignore src/__init__.py src/config.py
 git commit -m "chore: prépare l'environnement Python et la configuration"
 ```
 
@@ -969,11 +1012,6 @@ Source : Inside Airbnb, instantané du 15 juin 2026 (licence CC BY 4.0).
 - [ ] **Étape 2 : Cellule de configuration**
 
 ```python
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path.cwd().parent))  # pour importer src/ depuis notebooks/
-
 import folium
 import matplotlib.pyplot as plt
 import numpy as np
@@ -1159,11 +1197,6 @@ le modèle final une seule fois sur le jeu de test (20 %) et on interprète ses 
 - [ ] **Étape 2 : Configuration et données**
 
 ```python
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path.cwd().parent))
-
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
