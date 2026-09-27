@@ -85,7 +85,7 @@ rel_error = artifact["test_median_rel_error"]
 
 st.metric("Prix estimé par nuit", f"{price:.0f} $")
 st.caption(
-    f"Fourchette indicative : {price * (1 - rel_error):.0f} $ – {price * (1 + rel_error):.0f} $. "
+    f"Fourchette indicative : {price * (1 - rel_error):.0f} \\$ – {price * (1 + rel_error):.0f} \\$. "
     f"Sur le jeu de test, la moitié des estimations sont à moins de {rel_error:.0%} du vrai prix."
 )
 st.map(pd.DataFrame({"lat": [station["lat"]], "lon": [station["lon"]]}), zoom=13)
